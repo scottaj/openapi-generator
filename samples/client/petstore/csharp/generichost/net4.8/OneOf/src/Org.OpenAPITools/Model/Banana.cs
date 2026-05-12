@@ -53,7 +53,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Count
         /// </summary>
         [JsonPropertyName("count")]
-        public decimal? Count { get { return this.CountOption; } set { this.CountOption = new Option<decimal?>(value); } }
+        public decimal? Count { get { return this.CountOption.Value; } set { this.CountOption = new Option<decimal?>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -126,8 +126,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "count":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                count = new Option<decimal?>(utf8JsonReader.GetDecimal());
+                            count = new Option<decimal?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (decimal?)null : utf8JsonReader.GetDecimal());
                             break;
                         default:
                             break;

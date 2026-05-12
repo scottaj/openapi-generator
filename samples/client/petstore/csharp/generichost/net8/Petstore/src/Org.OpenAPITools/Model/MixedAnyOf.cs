@@ -53,7 +53,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Content
         /// </summary>
         [JsonPropertyName("content")]
-        public MixedAnyOfContent Content { get { return this.ContentOption; } set { this.ContentOption = new(value); } }
+        public MixedAnyOfContent Content { get { return this.ContentOption.Value; } set { this.ContentOption = new(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -126,8 +126,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "content":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                content = new Option<MixedAnyOfContent>(JsonSerializer.Deserialize<MixedAnyOfContent>(ref utf8JsonReader, jsonSerializerOptions));
+                            content = new Option<MixedAnyOfContent>(JsonSerializer.Deserialize<MixedAnyOfContent>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;

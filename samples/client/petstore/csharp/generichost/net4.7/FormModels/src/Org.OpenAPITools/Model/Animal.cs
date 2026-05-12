@@ -36,6 +36,7 @@ namespace Org.OpenAPITools.Model
         [JsonConstructor]
         public Animal(Option<string> color = default)
         {
+            ClassName = this.GetType().Name;
             ColorOption = color;
             OnCreated();
         }
@@ -47,7 +48,7 @@ namespace Org.OpenAPITools.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public string ClassName { get; } = "Animal";
+        public string ClassName { get; }
 
         /// <summary>
         /// Used to track the state of Color
@@ -60,7 +61,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Color
         /// </summary>
         [JsonPropertyName("color")]
-        public string Color { get { return this.ColorOption; } set { this.ColorOption = new Option<string>(value); } }
+        public string Color { get { return this.ColorOption.Value; } set { this.ColorOption = new Option<string>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties

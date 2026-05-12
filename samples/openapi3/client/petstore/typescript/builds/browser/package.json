@@ -20,7 +20,7 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.js"
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
@@ -33,11 +33,9 @@
   },
   "dependencies": {
     "whatwg-fetch": "^3.0.0",
-    "es6-promise": "^4.2.4",
-    "url-parse": "^1.4.3"
+    "es6-promise": "^4.2.4"
   },
   "devDependencies": {
-    "typescript": "^4.0",
-    "@types/url-parse": "1.4.4"
+    "typescript": "^5.0"
   }
 }

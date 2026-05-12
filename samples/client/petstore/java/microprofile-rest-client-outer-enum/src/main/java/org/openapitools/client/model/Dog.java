@@ -1,4 +1,4 @@
-/**
+/*
  * Petstore API
  * API for managing pets in a pet store
  *
@@ -12,6 +12,10 @@
 
 package org.openapitools.client.model;
 
+import java.util.Objects;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 import org.openapitools.client.model.Status;
 import java.lang.reflect.Type;
 import javax.json.bind.annotation.JsonbTypeDeserializer;
@@ -23,18 +27,20 @@ import javax.json.bind.serializer.SerializationContext;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbCreator;
 
 
 public class Dog  {
   
   @JsonbProperty("id")
-  private Long id;
+  protected Long id;
 
   @JsonbProperty("name")
-  private String name;
+  protected String name;
 
   @JsonbProperty("status")
-  private Status status;
+  protected Status status;
+
 
   /**
    * Get id
@@ -96,6 +102,24 @@ public class Dog  {
     return this;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Dog dog = (Dog) o;
+    return Objects.equals(this.id, dog.id) &&
+        Objects.equals(this.name, dog.name) &&
+        Objects.equals(this.status, dog.status);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, status);
+  }
 
   /**
    * Create a string representation of this pojo.
@@ -117,10 +141,7 @@ public class Dog  {
    * (except the first line).
    */
   private static String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
 

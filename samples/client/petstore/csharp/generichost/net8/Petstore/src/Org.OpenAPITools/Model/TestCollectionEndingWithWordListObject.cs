@@ -53,7 +53,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets TestCollectionEndingWithWordList
         /// </summary>
         [JsonPropertyName("TestCollectionEndingWithWordList")]
-        public List<TestCollectionEndingWithWordList> TestCollectionEndingWithWordList { get { return this.TestCollectionEndingWithWordListOption; } set { this.TestCollectionEndingWithWordListOption = new(value); } }
+        public List<TestCollectionEndingWithWordList> TestCollectionEndingWithWordList { get { return this.TestCollectionEndingWithWordListOption.Value; } set { this.TestCollectionEndingWithWordListOption = new(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -126,8 +126,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "TestCollectionEndingWithWordList":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                testCollectionEndingWithWordList = new Option<List<TestCollectionEndingWithWordList>>(JsonSerializer.Deserialize<List<TestCollectionEndingWithWordList>>(ref utf8JsonReader, jsonSerializerOptions));
+                            testCollectionEndingWithWordList = new Option<List<TestCollectionEndingWithWordList>>(JsonSerializer.Deserialize<List<TestCollectionEndingWithWordList>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;

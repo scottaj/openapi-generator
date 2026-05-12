@@ -53,7 +53,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets ArrayArrayNumber
         /// </summary>
         [JsonPropertyName("ArrayArrayNumber")]
-        public List<List<decimal>> ArrayArrayNumber { get { return this.ArrayArrayNumberOption; } set { this.ArrayArrayNumberOption = new Option<List<List<decimal>>>(value); } }
+        public List<List<decimal>> ArrayArrayNumber { get { return this.ArrayArrayNumberOption.Value; } set { this.ArrayArrayNumberOption = new Option<List<List<decimal>>>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -126,8 +126,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "ArrayArrayNumber":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                arrayArrayNumber = new Option<List<List<decimal>>>(JsonSerializer.Deserialize<List<List<decimal>>>(ref utf8JsonReader, jsonSerializerOptions));
+                            arrayArrayNumber = new Option<List<List<decimal>>>(JsonSerializer.Deserialize<List<List<decimal>>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;

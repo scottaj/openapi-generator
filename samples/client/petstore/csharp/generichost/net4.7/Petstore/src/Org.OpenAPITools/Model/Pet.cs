@@ -145,12 +145,12 @@ namespace Org.OpenAPITools.Model
         /// </summary>
         /// <value>pet status in the store</value>
         [JsonPropertyName("status")]
-        public StatusEnum? Status { get { return this.StatusOption; } set { this.StatusOption = new Option<StatusEnum?>(value); } }
+        public StatusEnum? Status { get { return this.StatusOption.Value; } set { this.StatusOption = new Option<StatusEnum?>(value); } }
 
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        /// <example>doggie</example>
+        /* <example>doggie</example> */
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
@@ -171,7 +171,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Category
         /// </summary>
         [JsonPropertyName("category")]
-        public Category Category { get { return this.CategoryOption; } set { this.CategoryOption = new Option<Category>(value); } }
+        public Category Category { get { return this.CategoryOption.Value; } set { this.CategoryOption = new Option<Category>(value); } }
 
         /// <summary>
         /// Used to track the state of Id
@@ -184,7 +184,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Id
         /// </summary>
         [JsonPropertyName("id")]
-        public long? Id { get { return this.IdOption; } set { this.IdOption = new Option<long?>(value); } }
+        public long? Id { get { return this.IdOption.Value; } set { this.IdOption = new Option<long?>(value); } }
 
         /// <summary>
         /// Used to track the state of Tags
@@ -197,7 +197,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Tags
         /// </summary>
         [JsonPropertyName("tags")]
-        public List<Tag> Tags { get { return this.TagsOption; } set { this.TagsOption = new Option<List<Tag>>(value); } }
+        public List<Tag> Tags { get { return this.TagsOption.Value; } set { this.TagsOption = new Option<List<Tag>>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -283,16 +283,13 @@ namespace Org.OpenAPITools.Model
                             name = new Option<string>(utf8JsonReader.GetString());
                             break;
                         case "photoUrls":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                photoUrls = new Option<List<string>>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions));
+                            photoUrls = new Option<List<string>>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "category":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                category = new Option<Category>(JsonSerializer.Deserialize<Category>(ref utf8JsonReader, jsonSerializerOptions));
+                            category = new Option<Category>(JsonSerializer.Deserialize<Category>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "id":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                id = new Option<long?>(utf8JsonReader.GetInt64());
+                            id = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
                             break;
                         case "status":
                             string statusRawValue = utf8JsonReader.GetString();
@@ -300,8 +297,7 @@ namespace Org.OpenAPITools.Model
                                 status = new Option<Pet.StatusEnum?>(Pet.StatusEnumFromStringOrDefault(statusRawValue));
                             break;
                         case "tags":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                tags = new Option<List<Tag>>(JsonSerializer.Deserialize<List<Tag>>(ref utf8JsonReader, jsonSerializerOptions));
+                            tags = new Option<List<Tag>>(JsonSerializer.Deserialize<List<Tag>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;

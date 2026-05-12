@@ -60,7 +60,7 @@ namespace Org.OpenAPITools.Model
         /// </summary>
         [JsonPropertyName("bars")]
         [Obsolete]
-        public List<string> Bars { get { return this.BarsOption; } set { this.BarsOption = new Option<List<string>>(value); } }
+        public List<string> Bars { get { return this.BarsOption.Value; } set { this.BarsOption = new Option<List<string>>(value); } }
 
         /// <summary>
         /// Used to track the state of DeprecatedRef
@@ -74,7 +74,7 @@ namespace Org.OpenAPITools.Model
         /// </summary>
         [JsonPropertyName("deprecatedRef")]
         [Obsolete]
-        public DeprecatedObject DeprecatedRef { get { return this.DeprecatedRefOption; } set { this.DeprecatedRefOption = new Option<DeprecatedObject>(value); } }
+        public DeprecatedObject DeprecatedRef { get { return this.DeprecatedRefOption.Value; } set { this.DeprecatedRefOption = new Option<DeprecatedObject>(value); } }
 
         /// <summary>
         /// Used to track the state of Id
@@ -88,7 +88,7 @@ namespace Org.OpenAPITools.Model
         /// </summary>
         [JsonPropertyName("id")]
         [Obsolete]
-        public decimal? Id { get { return this.IdOption; } set { this.IdOption = new Option<decimal?>(value); } }
+        public decimal? Id { get { return this.IdOption.Value; } set { this.IdOption = new Option<decimal?>(value); } }
 
         /// <summary>
         /// Used to track the state of Uuid
@@ -101,7 +101,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Uuid
         /// </summary>
         [JsonPropertyName("uuid")]
-        public string Uuid { get { return this.UuidOption; } set { this.UuidOption = new Option<string>(value); } }
+        public string Uuid { get { return this.UuidOption.Value; } set { this.UuidOption = new Option<string>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -180,16 +180,13 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "bars":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                bars = new Option<List<string>>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions));
+                            bars = new Option<List<string>>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "deprecatedRef":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                deprecatedRef = new Option<DeprecatedObject>(JsonSerializer.Deserialize<DeprecatedObject>(ref utf8JsonReader, jsonSerializerOptions));
+                            deprecatedRef = new Option<DeprecatedObject>(JsonSerializer.Deserialize<DeprecatedObject>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "id":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                id = new Option<decimal?>(utf8JsonReader.GetDecimal());
+                            id = new Option<decimal?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (decimal?)null : utf8JsonReader.GetDecimal());
                             break;
                         case "uuid":
                             uuid = new Option<string>(utf8JsonReader.GetString());

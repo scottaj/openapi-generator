@@ -1,17 +1,12 @@
 package org.openapitools.codegen.validations.oas;
 
 import io.swagger.v3.oas.models.media.Schema;
-
 import org.openapitools.codegen.utils.ModelUtils;
 import org.openapitools.codegen.utils.SemVer;
 import org.openapitools.codegen.validation.GenericValidator;
 import org.openapitools.codegen.validation.ValidationRule;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * A standalone instance for evaluating rules and recommendations related to OAS {@link Schema}
@@ -72,8 +67,8 @@ class OpenApiSchemaValidations extends GenericValidator<SchemaWrapper> {
             // check for loosely defined oneOf extension requirements.
             // This is a recommendation because the 3.0.x spec is not clear enough on usage of oneOf.
             // see https://json-schema.org/draft/2019-09/json-schema-core.html#rfc.section.9.2.1.3 and the OAS section on 'Composition and Inheritance'.
-            if (schema.getOneOf() != null && schema.getOneOf().size() > 0) {
-                if (schema.getProperties() != null && schema.getProperties().size() >= 1 && schema.getProperties().get("discriminator") == null) {
+            if (ModelUtils.hasOneOf(schema)) {
+                if (ModelUtils.hasProperties(schema) && schema.getProperties().get("discriminator") == null) {
                     // not necessarily "invalid" here, but we trigger the recommendation which requires the method to return false.
                     result = ValidationRule.Fail.empty();
                 }
@@ -101,13 +96,9 @@ class OpenApiSchemaValidations extends GenericValidator<SchemaWrapper> {
                 // OAS spec is 3.0.x
                 if (ModelUtils.isNullType(schema)) {
                     result = new ValidationRule.Fail();
-                    String name = schema.getName();
-                    if (name == null) {
-                        name = schema.getTitle();
-                    }
                     result.setDetails(String.format(Locale.ROOT,
-                        "Schema '%s' uses a 'null' type, which is specified in OAS 3.1 and above, but OAS document is version %s",
-                        name, schemaWrapper.getOpenAPI().getOpenapi()));
+                            "Schema '%s' uses a 'null' type, which is specified in OAS 3.1 and above, but OAS document is version %s",
+                            nameOf(schema), schemaWrapper.getOpenAPI().getOpenapi()));
                     return result;
                 }
             }
@@ -131,13 +122,9 @@ class OpenApiSchemaValidations extends GenericValidator<SchemaWrapper> {
             if (version.atLeast("3.1")) {
                 if (ModelUtils.isNullable(schema)) {
                     result = new ValidationRule.Fail();
-                    String name = schema.getName();
-                    if (name == null) {
-                        name = schema.getTitle();
-                    }
                     result.setDetails(String.format(Locale.ROOT,
-                        "OAS document is version '%s'. Schema '%s' uses 'nullable' attribute, which has been deprecated in OAS 3.1.",
-                        schemaWrapper.getOpenAPI().getOpenapi(), name));
+                            "OAS document is version '%s'. Schema '%s' uses 'nullable' attribute, which has been deprecated in OAS 3.1.",
+                            schemaWrapper.getOpenAPI().getOpenapi(), nameOf(schema)));
                     return result;
                 }
             }
@@ -145,9 +132,13 @@ class OpenApiSchemaValidations extends GenericValidator<SchemaWrapper> {
         return result;
     }
 
+    private static String nameOf(Schema schema) {
+        return schema.getName() != null ? schema.getName() : schema.getTitle();
+    }
+
     // The set of valid OAS values for the 'type' attribute.
     private static Set<String> validTypes = new HashSet<String>(
-        Arrays.asList("null", "boolean", "object", "array", "number", "string", "integer"));
+            Arrays.asList("null", "boolean", "object", "array", "number", "string", "integer"));
 
     /**
      * Validate the OAS document uses supported values for the 'type' attribute.
@@ -162,13 +153,9 @@ class OpenApiSchemaValidations extends GenericValidator<SchemaWrapper> {
         ValidationRule.Result result = ValidationRule.Pass.empty();
         if (schema.getType() != null && !validTypes.contains(schema.getType())) {
             result = new ValidationRule.Fail();
-            String name = schema.getName();
-            if (name == null) {
-                name = schema.getTitle();
-            }
             result.setDetails(String.format(Locale.ROOT,
-                "Schema '%s' uses the '%s' type, which is not a valid type.",
-                name, schema.getType()));
+                    "Schema '%s' uses the '%s' type, which is not a valid type.",
+                    nameOf(schema), schema.getType()));
             return result;
         }
         return result;

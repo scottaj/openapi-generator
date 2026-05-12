@@ -34,12 +34,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * <p>Mustache templates are located in {@code src/main/resources/php-nextgen/}.
+ */
 public class PhpNextgenClientCodegen extends AbstractPhpCodegen {
     @SuppressWarnings("hiding")
     private final Logger LOGGER = LoggerFactory.getLogger(PhpNextgenClientCodegen.class);
@@ -125,6 +124,7 @@ public class PhpNextgenClientCodegen extends AbstractPhpCodegen {
 
         supportingFiles.add(new SupportingFile("ApiException.mustache", toSrcPath(invokerPackage, srcBasePath), "ApiException.php"));
         supportingFiles.add(new SupportingFile("Configuration.mustache", toSrcPath(invokerPackage, srcBasePath), "Configuration.php"));
+        supportingFiles.add(new SupportingFile("FormDataProcessor.mustache", toSrcPath(invokerPackage, srcBasePath), "FormDataProcessor.php"));
         supportingFiles.add(new SupportingFile("ObjectSerializer.mustache", toSrcPath(invokerPackage, srcBasePath), "ObjectSerializer.php"));
         supportingFiles.add(new SupportingFile("ModelInterface.mustache", toSrcPath(modelPackage, srcBasePath), "ModelInterface.php"));
         supportingFiles.add(new SupportingFile("HeaderSelector.mustache", toSrcPath(invokerPackage, srcBasePath), "HeaderSelector.php"));
@@ -136,7 +136,7 @@ public class PhpNextgenClientCodegen extends AbstractPhpCodegen {
         supportingFiles.add(new SupportingFile(".phplint.mustache", "", ".phplint.yml"));
         supportingFiles.add(new SupportingFile("git_push.sh.mustache", "", "git_push.sh"));
 
-        if(this.supportStreaming) {
+        if (this.supportStreaming) {
             typeMapping.put("file", "\\Psr\\\\Http\\\\Message\\\\StreamInterface");
         }
     }
@@ -170,16 +170,6 @@ public class PhpNextgenClientCodegen extends AbstractPhpCodegen {
 
                 prop.vendorExtensions.putIfAbsent("x-php-prop-type", propType);
             }
-
-            if (model.isEnum) {
-                for (Map<String, Object> enumVars : (List<Map<String, Object>>) model.getAllowableValues().get("enumVars")) {
-                    if ((Boolean) enumVars.get("isString")) {
-                        model.vendorExtensions.putIfAbsent("x-php-enum-type", "string");
-                    } else {
-                        model.vendorExtensions.putIfAbsent("x-php-enum-type", "int");
-                    }
-                }
-            }
         }
         return objs;
     }
@@ -189,22 +179,58 @@ public class PhpNextgenClientCodegen extends AbstractPhpCodegen {
         objs = super.postProcessOperationsWithModels(objs, allModels);
         OperationMap operations = objs.getOperations();
         for (CodegenOperation operation : operations.getOperation()) {
-            if (operation.returnType == null) {
-                operation.vendorExtensions.putIfAbsent("x-php-return-type", "void");
-            } else {
-                if (operation.returnProperty.isContainer) { // array or map
-                    operation.vendorExtensions.putIfAbsent("x-php-return-type", "array");
+            Set<String> phpReturnTypeOptions = new LinkedHashSet<>();
+            Set<String> docReturnTypeOptions = new LinkedHashSet<>();
+            boolean hasEmptyResponse = false;
+
+            for (CodegenResponse response : operation.responses) {
+                if (response.dataType != null) {
+                    String returnType = response.dataType;
+                    if (response.isArray || response.isMap) {
+                        // PHP does not understand array type hinting so we strip it
+                        // The phpdoc will still contain the array type hinting
+                        returnType = "array";
+                    }
+
+                    phpReturnTypeOptions.add(returnType);
+                    docReturnTypeOptions.add(response.dataType);
                 } else {
-                    operation.vendorExtensions.putIfAbsent("x-php-return-type", operation.returnType);
+                    hasEmptyResponse = true;
                 }
             }
 
-            for (CodegenParameter param : operation.allParams) {
-                if (param.isArray || param.isMap) {
-                    param.vendorExtensions.putIfAbsent("x-php-param-type", "array");
-                } else {
-                    param.vendorExtensions.putIfAbsent("x-php-param-type", param.dataType);
+            if (phpReturnTypeOptions.isEmpty()) {
+                operation.vendorExtensions.putIfAbsent("x-php-return-type-is-void", true);
+                operation.vendorExtensions.putIfAbsent("x-php-return-type", "void");
+                operation.vendorExtensions.putIfAbsent("x-php-doc-return-type", "void");
+            } else {
+                String phpReturnType = String.join("|", phpReturnTypeOptions);
+                String docReturnType = String.join("|", docReturnTypeOptions);
+                if (hasEmptyResponse) {
+                    if (phpReturnTypeOptions.size() > 1) {
+                        phpReturnType = phpReturnType + "|null";
+                    } else {
+                        phpReturnType = "?" + phpReturnType;
+                    }
+                    docReturnType = docReturnType + "|null";
                 }
+
+                operation.vendorExtensions.putIfAbsent("x-php-return-type-is-void", false);
+                operation.vendorExtensions.putIfAbsent("x-php-return-type", phpReturnType);
+                operation.vendorExtensions.putIfAbsent("x-php-doc-return-type", docReturnType);
+            }
+
+            for (CodegenParameter param : operation.allParams) {
+                String paramType;
+                if (param.isArray || param.isMap) {
+                    paramType = "array";
+                } else {
+                    paramType = param.dataType;
+                }
+                if ((!param.required || param.isNullable) && !paramType.equals("mixed")) { // optional or nullable but not mixed
+                    paramType = "?" + paramType;
+                }
+                param.vendorExtensions.putIfAbsent("x-php-param-type", paramType);
             }
         }
 
@@ -218,7 +244,7 @@ public class PhpNextgenClientCodegen extends AbstractPhpCodegen {
             schema = ModelUtils.getReferencedSchema(this.openAPI, schema);
 
             if (schema.getDefault() != null) { // array schema has default value
-                return "[" + schema.getDefault().toString() + "]";
+                return schema.getDefault().toString();
             } else if (schema.getItems().getDefault() != null) { // array item schema has default value
                 return "[" + toDefaultValue(schema.getItems()) + "]";
             } else {

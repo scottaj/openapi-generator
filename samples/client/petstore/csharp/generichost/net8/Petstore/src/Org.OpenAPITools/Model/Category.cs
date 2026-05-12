@@ -55,7 +55,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Id
         /// </summary>
         [JsonPropertyName("id")]
-        public long? Id { get { return this.IdOption; } set { this.IdOption = new(value); } }
+        public long? Id { get { return this.IdOption.Value; } set { this.IdOption = new(value); } }
 
         /// <summary>
         /// Gets or Sets Name
@@ -136,8 +136,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "id":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                id = new Option<long?>(utf8JsonReader.GetInt64());
+                            id = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
                             break;
                         case "name":
                             name = new Option<string>(utf8JsonReader.GetString());

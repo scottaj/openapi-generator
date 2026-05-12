@@ -55,7 +55,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Prop1
         /// </summary>
         [JsonPropertyName("prop1")]
-        public string Prop1 { get { return this.Prop1Option; } set { this.Prop1Option = new Option<string>(value); } }
+        public string Prop1 { get { return this.Prop1Option.Value; } set { this.Prop1Option = new Option<string>(value); } }
 
         /// <summary>
         /// Used to track the state of Prop2
@@ -68,7 +68,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Prop2
         /// </summary>
         [JsonPropertyName("prop2")]
-        public Object Prop2 { get { return this.Prop2Option; } set { this.Prop2Option = new Option<Object>(value); } }
+        public Object Prop2 { get { return this.Prop2Option.Value; } set { this.Prop2Option = new Option<Object>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -146,8 +146,7 @@ namespace Org.OpenAPITools.Model
                             prop1 = new Option<string>(utf8JsonReader.GetString());
                             break;
                         case "prop2":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                prop2 = new Option<Object>(JsonSerializer.Deserialize<Object>(ref utf8JsonReader, jsonSerializerOptions));
+                            prop2 = new Option<Object>(JsonSerializer.Deserialize<Object>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;

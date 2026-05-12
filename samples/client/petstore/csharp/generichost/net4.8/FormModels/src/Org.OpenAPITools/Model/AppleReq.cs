@@ -61,7 +61,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Mealy
         /// </summary>
         [JsonPropertyName("mealy")]
-        public bool? Mealy { get { return this.MealyOption; } set { this.MealyOption = new Option<bool?>(value); } }
+        public bool? Mealy { get { return this.MealyOption.Value; } set { this.MealyOption = new Option<bool?>(value); } }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -132,8 +132,7 @@ namespace Org.OpenAPITools.Model
                             cultivar = new Option<string>(utf8JsonReader.GetString());
                             break;
                         case "mealy":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                mealy = new Option<bool?>(utf8JsonReader.GetBoolean());
+                            mealy = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
                             break;
                         default:
                             break;

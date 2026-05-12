@@ -44,13 +44,6 @@ namespace Org.OpenAPITools.Model
         partial void OnCreated();
 
         /// <summary>
-        /// The discriminator
-        /// </summary>
-        [JsonIgnore]
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public new string ClassName { get; } = "Cat";
-
-        /// <summary>
         /// Used to track the state of Declawed
         /// </summary>
         [JsonIgnore]
@@ -61,7 +54,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Declawed
         /// </summary>
         [JsonPropertyName("declawed")]
-        public bool? Declawed { get { return this.DeclawedOption; } set { this.DeclawedOption = new Option<bool?>(value); } }
+        public bool? Declawed { get { return this.DeclawedOption.Value; } set { this.DeclawedOption = new Option<bool?>(value); } }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -126,8 +119,7 @@ namespace Org.OpenAPITools.Model
                             color = new Option<string>(utf8JsonReader.GetString());
                             break;
                         case "declawed":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                declawed = new Option<bool?>(utf8JsonReader.GetBoolean());
+                            declawed = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
                             break;
                         default:
                             break;

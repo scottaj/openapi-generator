@@ -21,23 +21,24 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import jakarta.validation.constraints.*;
-import jakarta.validation.Valid;
+import javax.validation.constraints.*;
+import javax.validation.Valid;
 import org.hibernate.validator.constraints.*;
 
 /**
  * Model for testing reserved words
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.8.0-SNAPSHOT")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.23.0-SNAPSHOT")
 public class ModelReturn {
   public static final String SERIALIZED_NAME_RETURN = "return";
   @SerializedName(SERIALIZED_NAME_RETURN)
+  @javax.annotation.Nullable
   private Integer _return;
 
   public ModelReturn() {
   }
 
-  public ModelReturn _return(Integer _return) {
+  public ModelReturn _return(@javax.annotation.Nullable Integer _return) {
     
     this._return = _return;
     return this;
@@ -55,9 +56,10 @@ public class ModelReturn {
   }
 
 
-  public void setReturn(Integer _return) {
+  public void setReturn(@javax.annotation.Nullable Integer _return) {
     this._return = _return;
   }
+
 
   @Override
   public boolean equals(Object o) {
@@ -90,10 +92,7 @@ public class ModelReturn {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
 }

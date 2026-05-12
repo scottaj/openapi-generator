@@ -53,7 +53,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets String
         /// </summary>
         [JsonPropertyName("string")]
-        public Foo String { get { return this.StringOption; } set { this.StringOption = new Option<Foo>(value); } }
+        public Foo String { get { return this.StringOption.Value; } set { this.StringOption = new Option<Foo>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -126,8 +126,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "string":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                varString = new Option<Foo>(JsonSerializer.Deserialize<Foo>(ref utf8JsonReader, jsonSerializerOptions));
+                            varString = new Option<Foo>(JsonSerializer.Deserialize<Foo>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;

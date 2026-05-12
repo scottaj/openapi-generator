@@ -71,7 +71,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets VarReturn
         /// </summary>
         [JsonPropertyName("return")]
-        public int? VarReturn { get { return this.VarReturnOption; } set { this.VarReturnOption = new(value); } }
+        public int? VarReturn { get { return this.VarReturnOption.Value; } set { this.VarReturnOption = new(value); } }
 
         /// <summary>
         /// Used to track the state of Unsafe
@@ -84,7 +84,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets Unsafe
         /// </summary>
         [JsonPropertyName("unsafe")]
-        public string Unsafe { get { return this.UnsafeOption; } set { this.UnsafeOption = new(value); } }
+        public string Unsafe { get { return this.UnsafeOption.Value; } set { this.UnsafeOption = new(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -169,8 +169,7 @@ namespace Org.OpenAPITools.Model
                             varAbstract = new Option<string>(utf8JsonReader.GetString());
                             break;
                         case "return":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                varReturn = new Option<int?>(utf8JsonReader.GetInt32());
+                            varReturn = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
                             break;
                         case "unsafe":
                             varUnsafe = new Option<string>(utf8JsonReader.GetString());

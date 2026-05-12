@@ -7,7 +7,6 @@ import javax.ws.rs.core.Response;
 
 
 
-
 import java.io.InputStream;
 import java.util.Map;
 import java.util.List;
@@ -60,7 +59,7 @@ import javax.validation.Valid;
     ), 
 })
 @Path("/fake_classname_test")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", comments = "Generator version: 7.8.0-SNAPSHOT")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", comments = "Generator version: 7.23.0-SNAPSHOT")
 public class FakeClassnameTestApi {
 
     @PATCH
@@ -79,4 +78,5 @@ public class FakeClassnameTestApi {
     public Response testClassname(@Valid @NotNull Client client) {
         return Response.ok().entity("magic!").build();
     }
+
 }

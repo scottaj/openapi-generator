@@ -25,23 +25,24 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import jakarta.validation.constraints.*;
-import jakarta.validation.Valid;
+import javax.validation.constraints.*;
+import javax.validation.Valid;
 import org.hibernate.validator.constraints.*;
 
 /**
  * ArrayOfNumberOnly
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.8.0-SNAPSHOT")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.23.0-SNAPSHOT")
 public class ArrayOfNumberOnly {
   public static final String SERIALIZED_NAME_ARRAY_NUMBER = "ArrayNumber";
   @SerializedName(SERIALIZED_NAME_ARRAY_NUMBER)
+  @javax.annotation.Nullable
   private List<BigDecimal> arrayNumber = new ArrayList<>();
 
   public ArrayOfNumberOnly() {
   }
 
-  public ArrayOfNumberOnly arrayNumber(List<BigDecimal> arrayNumber) {
+  public ArrayOfNumberOnly arrayNumber(@javax.annotation.Nullable List<BigDecimal> arrayNumber) {
     
     this.arrayNumber = arrayNumber;
     return this;
@@ -68,9 +69,10 @@ public class ArrayOfNumberOnly {
   }
 
 
-  public void setArrayNumber(List<BigDecimal> arrayNumber) {
+  public void setArrayNumber(@javax.annotation.Nullable List<BigDecimal> arrayNumber) {
     this.arrayNumber = arrayNumber;
   }
+
 
   @Override
   public boolean equals(Object o) {
@@ -103,10 +105,7 @@ public class ArrayOfNumberOnly {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
 }

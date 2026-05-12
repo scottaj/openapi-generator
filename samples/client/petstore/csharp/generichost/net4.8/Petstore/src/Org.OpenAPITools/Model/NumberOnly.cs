@@ -53,7 +53,7 @@ namespace Org.OpenAPITools.Model
         /// Gets or Sets JustNumber
         /// </summary>
         [JsonPropertyName("JustNumber")]
-        public decimal? JustNumber { get { return this.JustNumberOption; } set { this.JustNumberOption = new Option<decimal?>(value); } }
+        public decimal? JustNumber { get { return this.JustNumberOption.Value; } set { this.JustNumberOption = new Option<decimal?>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -126,8 +126,7 @@ namespace Org.OpenAPITools.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "JustNumber":
-                            if (utf8JsonReader.TokenType != JsonTokenType.Null)
-                                justNumber = new Option<decimal?>(utf8JsonReader.GetDecimal());
+                            justNumber = new Option<decimal?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (decimal?)null : utf8JsonReader.GetDecimal());
                             break;
                         default:
                             break;

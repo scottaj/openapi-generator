@@ -7,7 +7,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
@@ -35,6 +37,40 @@ public class JSONTest {
         apiClient = new ApiClient();
         json = apiClient.getJSON();
         order = new Order();
+    }
+
+    @Test
+    public void testAnyOfWithNullableRequiredFields() {
+        Gson gson = json.getGson();
+
+        // Test: anyOf response with nullable required fields set to null should deserialize
+        // This reproduces the bug where Record<string, { before: string | null, after: string | null }>
+        // fails anyOf matching when field values are null.
+        String jsonStr = "{\"status\":\"success\",\"positions\":{\"comment1\":{\"before\":null,\"after\":\"3\"},\"comment2\":{\"before\":\"1\",\"after\":null}}}";
+        NullableFieldsMapResponse response = gson.fromJson(jsonStr, NullableFieldsMapResponse.class);
+        assertNotNull(response);
+        NullableFieldsMapSuccess success = response.getNullableFieldsMapSuccess();
+        assertNotNull(success);
+        assertEquals("success", success.getStatus());
+        assertNotNull(success.getPositions());
+        assertNull(success.getPositions().get("comment1").getBefore());
+        assertEquals("3", success.getPositions().get("comment1").getAfter());
+        assertEquals("1", success.getPositions().get("comment2").getBefore());
+        assertNull(success.getPositions().get("comment2").getAfter());
+    }
+
+    @Test
+    public void testAnyOfWithNullableRequiredFieldsBothNull() {
+        Gson gson = json.getGson();
+
+        // Both nullable fields are null
+        String jsonStr = "{\"status\":\"success\",\"positions\":{\"comment1\":{\"before\":null,\"after\":null}}}";
+        NullableFieldsMapResponse response = gson.fromJson(jsonStr, NullableFieldsMapResponse.class);
+        assertNotNull(response);
+        NullableFieldsMapSuccess success = response.getNullableFieldsMapSuccess();
+        assertNotNull(success);
+        assertNull(success.getPositions().get("comment1").getBefore());
+        assertNull(success.getPositions().get("comment1").getAfter());
     }
 
     @Test
@@ -274,13 +310,13 @@ public class JSONTest {
         assertEquals(t2.getName(), "tag test 1");
         assertEquals(t2.getId(), null);
 
-        // with all required fields 
+        // with all required fields
         String json3 = "{\"id\": 5847, \"name\":\"pet test 1\", \"photoUrls\": [\"https://a.com\", \"https://b.com\"]}";
         Pet t3 = gson.fromJson(json3, Pet.class);
         assertEquals(t3.getName(), "pet test 1");
         assertEquals(t3.getId(), Long.valueOf(5847));
 
-        // with all required fields and tags (optional) 
+        // with all required fields and tags (optional)
         String json4 = "{\"id\": 5847, \"name\":\"pet test 1\", \"photoUrls\": [\"https://a.com\", \"https://b.com\"],\"tags\":[{\"id\":\"tag 123\"}]}";
         Pet t4 = gson.fromJson(json3, Pet.class);
         assertEquals(t4.getName(), "pet test 1");
@@ -670,5 +706,22 @@ public class JSONTest {
             });
             assertTrue(exception.getMessage().contains("java.io.IOException: The JSON string is invalid for"));
         }
+    }
+
+    @Test
+    public void testRequiredNullableBody() throws Exception {
+        final String json1 = "{\"integer_prop\":null,\"number_prop\":null,\"boolean_prop\":null,\"string_prop\":null,\"date_prop\":null,\"datetime_prop\":null,\"array_nullable_prop\":null,\"array_and_items_nullable_prop\":null,\"array_items_nullable\":[],\"object_nullable_prop\":null,\"object_and_items_nullable_prop\":null,\"object_items_nullable\":{},\"custom_ref_enum\":null,\"custom_enum\":null}";
+        final RequiredNullableBody body = new RequiredNullableBody();
+
+        assertEquals("{\"array_items_nullable\":[],\"object_items_nullable\":{}}", json.serialize(body));
+        assertEquals(json.deserialize(json1, RequiredNullableBody.class), body);
+    }
+
+    @Test
+    public void testDeserializeInputStream() throws Exception {
+        final String str = "\"2016-09-09\"";
+        final InputStream inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+        final LocalDate date = LocalDate.of(2016, 9, 9);
+        assertEquals(date, json.deserialize(inputStream, LocalDate.class));
     }
 }

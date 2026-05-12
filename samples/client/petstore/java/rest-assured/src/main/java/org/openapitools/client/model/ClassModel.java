@@ -21,23 +21,24 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import jakarta.validation.constraints.*;
-import jakarta.validation.Valid;
+import javax.validation.constraints.*;
+import javax.validation.Valid;
 import org.hibernate.validator.constraints.*;
 
 /**
  * Model for testing model with \&quot;_class\&quot; property
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.8.0-SNAPSHOT")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.23.0-SNAPSHOT")
 public class ClassModel {
   public static final String SERIALIZED_NAME_PROPERTY_CLASS = "_class";
   @SerializedName(SERIALIZED_NAME_PROPERTY_CLASS)
+  @javax.annotation.Nullable
   private String propertyClass;
 
   public ClassModel() {
   }
 
-  public ClassModel propertyClass(String propertyClass) {
+  public ClassModel propertyClass(@javax.annotation.Nullable String propertyClass) {
     
     this.propertyClass = propertyClass;
     return this;
@@ -55,9 +56,10 @@ public class ClassModel {
   }
 
 
-  public void setPropertyClass(String propertyClass) {
+  public void setPropertyClass(@javax.annotation.Nullable String propertyClass) {
     this.propertyClass = propertyClass;
   }
+
 
   @Override
   public boolean equals(Object o) {
@@ -90,10 +92,7 @@ public class ClassModel {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
 }
